@@ -2,14 +2,10 @@ def main():
     book_path = "books/frankenstein.txt"
     text = get_book_text(book_path)
     
-    print(text)
-    
     word_count = count_words(text)
-    print(f"\nThe book contains {word_count} words.")
-    
     character_count = count_characters(text)
-    print("\nCharacter count:")
-    print(character_count)
+    
+    print_report(book_path, word_count, character_count)
 
 
 def get_book_text(path):
@@ -32,6 +28,19 @@ def count_characters(text):
             else:
                 character_dict[char] = 1
     return character_dict
+
+
+def print_report(book_path, word_count, character_count):
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{word_count} words found in the document\n")
+    
+    # Sort character count dictionary by count in descending order
+    sorted_characters = sorted(character_count.items(), key=lambda item: item[1], reverse=True)
+    
+    for char, count in sorted_characters:
+        print(f"The '{char}' character was found {count} times")
+    
+    print("--- End report ---")
 
 
 main()
