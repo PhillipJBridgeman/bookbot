@@ -1,11 +1,20 @@
+from stats import (
+    get_num_words,
+    chars_dict_to_sorted_list,
+    get_chars_dict,
+)
+import sys
+
 def main():
-    book_path = "books/frankenstein.txt"
+    if len(sys.argv) != 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    book_path = sys.argv[1]
     text = get_book_text(book_path)
-    
-    word_count = count_words(text)
-    character_count = count_characters(text)
-    
-    print_report(book_path, word_count, character_count)
+    num_words = get_num_words(text)
+    chars_dict = get_chars_dict(text)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+    print_report(book_path, num_words, chars_sorted_list)
 
 
 def get_book_text(path):
@@ -13,34 +22,18 @@ def get_book_text(path):
         return f.read()
 
 
-def count_words(text):
-    words = text.split()
-    return len(words)
+def print_report(book_path, num_words, chars_sorted_list):
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {num_words} total words")
+    print("--------- Character Count -------")
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"{item['char']}: {item['num']}")
 
-
-def count_characters(text):
-    text = text.lower()
-    character_dict = {}
-    for char in text:
-        if char.isalpha():  # Count only alphabetic characters
-            if char in character_dict:
-                character_dict[char] += 1
-            else:
-                character_dict[char] = 1
-    return character_dict
-
-
-def print_report(book_path, word_count, character_count):
-    print(f"--- Begin report of {book_path} ---")
-    print(f"{word_count} words found in the document\n")
-    
-    # Sort character count dictionary by count in descending order
-    sorted_characters = sorted(character_count.items(), key=lambda item: item[1], reverse=True)
-    
-    for char, count in sorted_characters:
-        print(f"The '{char}' character was found {count} times")
-    
-    print("--- End report ---")
+    print("============= END ===============")
 
 
 main()
